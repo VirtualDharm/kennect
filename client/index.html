@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Calendar App</title>
+</head>
+<body>
+  <h1>Calendar App</h1>
+
+  <label for="operation">Operation:</label>
+  <select id="operation">
+    <option value="add">Add</option>
+    <option value="subtract">Subtract</option>
+  </select>
+
+  <label for="value">Value:</label>
+  <input type="number" id="value" placeholder="Enter value">
+
+  <label for="fromDate">From Date (Optional):</label>
+  <input type="date" id="fromDate">
+
+  <button onclick="calculate()">Calculate</button>
+
+  <p id="result"></p>
+
+  <script>
+    function calculate() {
+      const operation = document.getElementById('operation').value;
+      const value = document.getElementById('value').value;
+      const fromDate = document.getElementById('fromDate').value;
+
+      const requestData = {
+        operation,
+        value: parseInt(value, 10),
+        fromDate
+      };
+
+      fetch('http://localhost:3000/calendar', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(requestData),
+      })
+      .then(response => response.json())
+      .then(data => {
+        document.getElementById('result').innerText = `Result: ${data.result}`;
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        document.getElementById('result').innerText = 'Error occurred. Check the console for details.';
+      });
+    }
+  </script>
+</body>
+</html>
